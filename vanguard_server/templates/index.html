@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centralized EDR Control Console</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #0F172A;
+            color: #E2E8F0;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased min-h-screen">
+
+    <!-- Header Navigation -->
+    <nav class="border-b border-slate-800 bg-slate-900/50 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold tracking-wider text-blue-500">VANGUARD EDR</span>
+                    <span class="ml-3 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-900/30 text-blue-400 border border-blue-800/50">Central Server</span>
+                </div>
+                <div class="text-sm text-slate-400">
+                    Live Feed Console
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Metrics Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-lg">
+                <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Active Endpoints</div>
+                <div class="text-4xl font-extrabold text-blue-400">{{ total_agents }}</div>
+            </div>
+            
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-lg">
+                <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Total Log Records</div>
+                <div class="text-4xl font-extrabold text-emerald-400">{{ total_logs }}</div>
+            </div>
+            
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-lg">
+                <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Active Alerts</div>
+                <div class="text-4xl font-extrabold text-red-500">{{ total_alerts }}</div>
+            </div>
+            
+        </div>
+
+        <!-- Alerts and Logs section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            <!-- Alerts panel -->
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-lg flex flex-col h-[550px]">
+                <h2 class="text-lg font-bold mb-4 text-red-400 flex items-center">
+                    <span class="flex h-3 w-3 relative mr-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                    </span>
+                    Consolidated Threat Alerts
+                </h2>
+                
+                <div class="overflow-y-auto flex-1 pr-2 space-y-4">
+                    {% if not alerts %}
+                    <p class="text-slate-500 text-sm italic text-center mt-20">No threat alerts reported yet.</p>
+                    {% else %}
+                        {% for alert in alerts %}
+                        <div class="p-4 rounded-lg bg-slate-950 border-l-4 {% if alert.score >= 5 %}border-red-500{% elif alert.score >= 4 %}border-orange-500{% else %}border-yellow-500{% endif %}">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-bold uppercase text-slate-400">Endpoint: {{ alert.agent_id }}</span>
+                                <span class="px-2 py-0.5 rounded text-xs font-bold bg-slate-900 text-red-400 border border-slate-800">
+                                    Risk: {{ alert.score }}/5
+                                </span>
+                            </div>
+                            <h3 class="text-sm font-semibold text-slate-200">{{ alert.type }}</h3>
+                            <p class="text-xs text-slate-400 mt-1">{{ alert.description }}</p>
+                            <span class="text-[10px] text-slate-500 block mt-2">{{ alert.timestamp }}</span>
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Logs panel -->
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-lg flex flex-col h-[550px]">
+                <h2 class="text-lg font-bold mb-4 text-emerald-400">Consolidated Endpoint Log Stream</h2>
+                
+                <div class="overflow-y-auto flex-1 pr-2">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-slate-800 text-xs text-slate-400 uppercase">
+                                <th class="py-2">Endpoint</th>
+                                <th class="py-2">Timestamp</th>
+                                <th class="py-2">Process / Image</th>
+                                <th class="py-2 text-right">PID</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-xs divide-y divide-slate-800/50">
+                            {% if not logs %}
+                            <tr>
+                                <td colspan="4" class="text-slate-500 italic text-center py-10">No logs stream yet.</td>
+                            </tr>
+                            {% else %}
+                                {% for log in logs %}
+                                <tr class="hover:bg-slate-950/30">
+                                    <td class="py-3 font-semibold text-slate-300">{{ log.agent_id }}</td>
+                                    <td class="py-3 text-slate-400">{{ log.timestamp }}</td>
+                                    <td class="py-3 text-slate-200 truncate max-w-xs" title="{{ log.image_path }}">{{ log.image_path.split('\\')[-1] }}</td>
+                                    <td class="py-3 text-slate-400 text-right">{{ log.pid }}</td>
+                                </tr>
+                                {% endfor %}
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+        </div>
+        
+    </main>
+
+    <footer class="border-t border-slate-800 mt-20 py-8 bg-slate-950/20 text-center text-xs text-slate-600">
+        &copy; 2026 Vanguard EDR Platform. Systems integrated console.
+    </footer>
+
+</body>
+</html>

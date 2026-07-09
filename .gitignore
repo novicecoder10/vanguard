@@ -1,0 +1,15 @@
+# Python cache files
+**/__pycache__/
+**/*.pyc
+
+# Local SQLite databases (EDR logs)
+**/*.db
+vanguard_agent/vanguard_logs.db
+vanguard_server/central_logs.db
+
+# Large neural network model weights (optional: can be uploaded, but keeping it unignored for now as it is 13.5MB)
+# vanguard_agent/behavioral-malware-detection-based-on-api-calls_model.h5
+
+# Local config & environments
+**/.env
+**/.env.local
