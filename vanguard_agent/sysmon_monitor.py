@@ -99,9 +99,8 @@ class SysmonMonitor(threading.Thread):
             subscription = win32evtlog.EvtSubscribe(
                 channel_path,
                 win32evtlog.EvtSubscribeStartAtOldestRecord,
-                None,
-                event_handle,
-                query
+                SignalEvent=event_handle,
+                Query=query
             )
         except Exception as e:
             print(f"Failed to subscribe to Sysmon (Is Sysmon installed?): {e}")
