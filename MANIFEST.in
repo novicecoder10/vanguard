@@ -1,0 +1,7 @@
+include README.md
+include LICENSE
+include CLAUDE.md
+include WINDOWS_FIX_LOG.md
+recursive-include docs *.md
+recursive-include vanguard_agent *.json *.h5 *.ico *.png *.txt
+recursive-include vanguard_server templates *.html

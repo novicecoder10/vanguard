@@ -1,0 +1,96 @@
+[build-system]
+requires = ["setuptools>=45", "wheel", "setuptools_scm[toml]>=6.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vanguard-edr"
+version = "1.0.0"
+description = "Full-stack Endpoint Detection & Response (EDR) system with real-time threat detection and active remediation"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [
+    {name = "Gautam Karat", email = "gautamkarat@gmail.com"}
+]
+keywords = [
+    "edr",
+    "endpoint-detection-response",
+    "threat-detection",
+    "malware-detection",
+    "security-monitoring",
+    "incident-response",
+    "behavioral-analysis",
+    "machine-learning",
+    "windows-security",
+    "sysmon",
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: System Administrators",
+    "Topic :: Security",
+    "Topic :: System :: Monitoring",
+    "Topic :: System :: Systems Administration",
+]
+
+dependencies = [
+    "flask>=2.0.0",
+    "customtkinter>=5.0.0",
+    "pywin32>=305",
+    "tensorflow>=2.4.0",
+    "tf-keras>=2.11.0",
+    "numpy>=1.20.0",
+    "watchdog>=2.1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=6.0",
+    "black>=21.0",
+    "flake8>=3.9.0",
+    "mypy>=0.910",
+]
+frida = [
+    "frida>=15.0.0",
+    "frida-tools>=11.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/novicecoder10/vanguard"
+"Bug Tracker" = "https://github.com/novicecoder10/vanguard/issues"
+Documentation = "https://github.com/novicecoder10/vanguard/blob/main/docs/DOCUMENTATION.md"
+"Source Code" = "https://github.com/novicecoder10/vanguard"
+
+[tool.setuptools]
+packages = ["vanguard_agent", "vanguard_server"]
+
+[tool.setuptools.package-data]
+vanguard_agent = [
+    "*.json",
+    "*.h5",
+    "*.ico",
+    "*.png",
+]
+vanguard_server = [
+    "templates/*.html",
+]
+
+[tool.black]
+line-length = 100
+target-version = ["py39", "py310", "py311"]
+
+[tool.isort]
+profile = "black"
+line_length = 100
+
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
